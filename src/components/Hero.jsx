@@ -1,6 +1,8 @@
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdOutlineDataSaverOn } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Logo from "./Logo";
 import { useState, useEffect } from "react";
 import PasswordList from "./PasswordList";
@@ -8,6 +10,7 @@ import PasswordList from "./PasswordList";
 const Hero = () => {
   const [showPass, setShowPass] = useState(true);
   const [arryPasss, setArryPasss] = useState([]);
+  const [showBtnText, setShowBtnText] = useState(true)
   const [formValue, setFormValue] = useState({
     websiteURL: "",
     username: "",
@@ -39,7 +42,32 @@ const Hero = () => {
 
   // Handling From Submit Button
   const handleFormSubmitBtn = (e) => {
+    
     e.preventDefault();
+    if (!showBtnText) {
+      toast("Succesfully Updated ", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+      setShowBtnText(true);
+    } else {
+      toast("Added Succesfully", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+    }
     // localStorage.setItem({websiteURL: formValue.websiteURL, username:formValue.username, password:formValue.password})
     setArryPasss((prev) => {
       const updatedPasswords = [...prev, { ...formValue, id: uuidv4() }];
@@ -51,32 +79,100 @@ const Hero = () => {
       username: "",
       password: "",
     });
+
   };
 
-  // Handling Delet Button
+  // Handling Delete Button
   const removeItem = (id) => {
+    toast("One Item removed", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     setArryPasss((prev) => {
       const updatedarryPass = prev.filter((item) => item.id !== id);
       localStorage.setItem("passwords", JSON.stringify(updatedarryPass));
       return updatedarryPass;
     });
-    console.log("deleting by: ", id);
   };
 
+  // Handling Edit Button
   const EditItem = (id) => {
-    console.log("Editing by: ", id);
+   setShowBtnText(false);
+    if (showBtnText) {
+      toast("Editing One Item", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    } 
+    
     setFormValue(() => {
       const updatedarryPass = arryPasss.filter((item) => item.id === id)[0];
       return updatedarryPass;
     });
-    setArryPasss(() => {
-      const updatedarryPass = arryPasss.filter((item) => item.id !== id);
+    setArryPasss((prev) => {
+      const updatedarryPass = prev.filter((item) => item.id !== id);
       return updatedarryPass;
     });
   };
 
+  // Handling Copy Button
+  const copyText = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast.success("Copied to clipboard!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      })
+      .catch(() => {
+        toast.error("Failed to copy", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      });
+  };
+
+
   return (
     <section className="font-mono py-10 pt-20">
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <div className="container w-full ">
         <div className=" w-full sm:w-2/3 mx-auto">
           <h2 className="text-center hidden sm:block">
@@ -140,7 +236,7 @@ const Hero = () => {
                   className="font-bold hover:scale-105 hover:bg-green-500 bg-green-400 px-6 py-1 rounded-full border-[0.5px] border-black flex gap-2 items-center"
                 >
                   <MdOutlineDataSaverOn />
-                  Add
+                  {showBtnText ? "Add" : "Edit"}
                 </button>
               </div>
             </form>
@@ -151,6 +247,7 @@ const Hero = () => {
         arryPasss={arryPasss}
         EditItem={EditItem}
         removeItem={removeItem}
+        copyText={copyText}
       />
     </section>
   );

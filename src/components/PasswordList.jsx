@@ -1,45 +1,16 @@
 /* eslint-disable react/prop-types */
 import { MdContentCopy, MdDeleteForever } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const PasswordList = ({ arryPasss, removeItem, EditItem }) => {
-  const copyText = (text) => {
-    toast("Copied to clipboard", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    navigator.clipboard.writeText(text);
-  };
-
+const PasswordList = ({ arryPasss, removeItem, EditItem, copyText }) => {
+  
   return (
     <section className="pt-10 w-full sm:w-[96%] mx-auto">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition="Bounce"
-      />
-      {/* Same as */}
-      <ToastContainer />
-
+      
       <div className=" font-sans">
-        <div className="w-full sm:w-[90%] mx-auto space-y-3">
-          <h2 className="text-3xl font-bold font-sans">Your Passwords</h2>
+        <div className="w-[90%] sm:w-[90%] mx-auto space-y-3">
+          <h2 className="text-3xl font-semibold font-sans">Your Passwords</h2>
           <table className="table-fixed space-y-3 w-full ">
             <thead className="mb-2">
               <tr className="bg-green-300">
@@ -50,10 +21,10 @@ const PasswordList = ({ arryPasss, removeItem, EditItem }) => {
               </tr>
             </thead>
             <tbody className="space-y-3">
-              {arryPasss.map((item, index) => {
+              {arryPasss.map((item) => {
                 const { websiteURL, username, password, id } = item;
                 return (
-                  <tr key={index} className="">
+                  <tr key={id} className="">
                     <td className="bg-green-100 border border-white py-1 px-2">
                       <div className="flex justify-between items-center">
                         <a
@@ -74,7 +45,7 @@ const PasswordList = ({ arryPasss, removeItem, EditItem }) => {
                     </td>
                     <td className="bg-green-100 border border-white py-2 px-2">
                       <div className="flex justify-between items-center">
-                        <p>{username}</p>{" "}
+                        <p className="overflow-x-scroll web-cell">{username}</p>{" "}
                         <button
                           className="cursor-pointer group"
                           onClick={() => copyText(item.username)}
@@ -85,7 +56,7 @@ const PasswordList = ({ arryPasss, removeItem, EditItem }) => {
                     </td>
                     <td className="bg-green-100 border border-white py-2 px-2">
                       <div className="flex justify-between items-center">
-                        <p>{password}</p>
+                        <p className="overflow-x-scroll web-cell">{password}</p>
                         <button
                           className="cursor-pointer group"
                           onClick={() => copyText(item.password)}
